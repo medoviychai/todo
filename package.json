@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "react-app-rewire-less": "^2.1.3"
+  },
+  "devDependencies": {
+    "jsdoc": "github:jsdoc/jsdoc"
+  }
+}

@@ -1,0 +1,181 @@
+@import (css) url('https://fonts.googleapis.com/css2?family=Manrope:wght@200;300;400;500;600;700;800&display=swap');
+
+@background-color: #DEE5E5;
+@font-main: Manrope;
+@accent-color: #17B890;
+@complementary-color: #5E807F;
+
+body {
+    background-color: @background-color;
+    font-family: @font-main;
+}
+
+// ШАПКА 
+
+.todo {
+    padding: 20px;
+    background-color: rgb(255, 255, 255);
+    margin: 50px auto;
+    width: 30%;
+    -webkit-box-shadow: 0px 0px 5px 0px rgba(34, 60, 80, 0.2);
+    -moz-box-shadow: 0px 0px 5px 0px rgba(34, 60, 80, 0.2);
+    box-shadow: 0px 0px 5px 0px rgba(34, 60, 80, 0.2);
+}
+
+.title {
+    margin: 10px 0 20px 0;
+    text-align: center;
+}
+
+// ДОБАВЛЕНИЕ ЗАДАЧИ
+
+.add-task {
+    padding: 10px 20px;
+    border: 1px solid black;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
+
+.task-inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    .title-input,
+    .description-textarea {
+        border: none;
+        width: 90%;
+        font-size: 18px;
+        font-family: @font-main;
+    }
+
+    .title-input,
+    .description-textarea:focus {
+        outline: none;
+    }
+
+    .description-textarea {
+        font-size: 15px;
+        overflow: hidden;
+        resize: none;
+    }
+}
+
+.file-input {
+    display: none;
+}
+
+.clip-image {
+    width: 35px;
+    cursor: pointer;
+}
+
+.change-date {
+    display: flex;
+    flex-direction: column;
+    font-size: 13px;
+    color: @complementary-color;
+
+    input {
+        width: 50%;
+    }
+}
+
+.add-task-button {
+    border-radius: 50%;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: @accent-color;
+    color: white;
+    cursor: pointer;
+
+    img {
+        width: 20px;
+        filter: invert();
+    }
+
+    &:hover {
+        background-color: @complementary-color;
+    }
+}
+
+// ЗАДАЧИ
+
+.task-item {
+    margin-bottom: 20px;
+}
+
+.main-task-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .task-name {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+
+        h3 {
+            margin: 0;
+        }
+
+        input:checked~h3 {
+            text-decoration: line-through;
+        }
+
+        .checkmark {
+            position: relative;
+            top: 0px;
+            left: -30px;
+            height: 20px;
+            width: 20px;
+            background-color: @background-color;
+        }
+
+        input:checked~.checkmark {
+            background-color: @accent-color;
+            background-image: url(https://cdn-icons-png.flaticon.com/512/2732/2732655.png);
+            background-size: cover;
+        }
+
+    }
+
+    .aside-icons {
+        display: flex;
+        gap: 15px;
+    }
+}
+
+.change-task,
+.delete-task {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    justify-self: end;
+}
+
+.description {
+    font-size: 15px;
+    margin: 5px 0 0 25px;
+    color: @complementary-color;
+}
+
+.files {
+    color: #082D0F;
+    margin-left: 25px;
+    font-size: 14px;
+}
+
+.date {
+    font-size: 13px;
+    margin: 5px 0 0 0;
+    text-align: end;
+    color: @complementary-color;
+}

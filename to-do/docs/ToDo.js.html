@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: ToDo.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: ToDo.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import React, { useState } from "react";
+import dayjs from "dayjs";
+import './ToDo.less';
+
+/**
+ * Функциональный компонент
+ * @namespace ToDo
+ */
+export default function ToDo() {
+  const [taskName, setTaskName] = useState("");
+  const [taskDescription, setTaskDescription] = useState("");
+  const [taskFile, setTaskFile] = useState("");
+  const [taskDate, setTaskDate] = useState("");
+  const [isEditable, setIsEditable] = useState(null);
+  const [taskArray, setTaskArray] = useState([]);
+  const [updateInput, setUpdateInput] = useState("");
+  const [updateTextarea, setUpdateTextarea] = useState("");
+
+  /**
+   * Предотвращает отправку формы при нажатии на кнопку
+   * @param {object} e - объект, в котором содержится информация о событии 
+   */
+  const handleSubmit = (e) => {
+    e.preventDefault();
+  };
+
+  /**
+   * Отслеживает и переписывает в state значение поля "Описание"
+   * @param {object} e - объект, в котором содержится информация о событии 
+   */
+  const handleTextarea = (e) => {
+    setTaskDescription(e.target.value);
+  };
+
+  /**
+   * Отслеживает и переписывает в state значение поля "Задача"
+   * @param {object} e - объект, в котором содержится информация о событии 
+   */
+  const handleInput = (e) => {
+    setTaskName(e.target.value);
+  };
+
+  /**
+   * Отслеживает и переписывает в state значение формы "Дата"
+   * @param {object} e - объект, в котором содержится информация о событии 
+   */
+  const handleDate = (e) => {
+    setTaskDate(e.target.value);
+  };
+
+  /**
+   * Отслеживает и переписывает в state значение формы "Файл"
+   * @param {object} e - объект, в котором содержится информация о событии 
+   */
+  const handleFile = (e) => {
+    setTaskFile(e.target.value);
+  };
+
+    /**
+   * Отслеживает и переписывает в state обновленное значение поля "Задача" в текущей задаче
+   * @param {object} e - объект, в котором содержится информация о событии 
+   */
+  const handleUpdateInput = (e) => {
+    setUpdateInput(e.target.value);
+  };
+
+  /**
+   * Отслеживает и переписывает в state обновленное значение поля "Описание" в текущей задаче
+   * @param {object} e - объект, в котором содержится информация о событии 
+   */
+  const handleUpdateTextarea = (e) => {
+    setUpdateTextarea(e.target.value);
+  };
+
+/**
+ * Добавляет задачу в общий список при условии, что хотя бы поле "Задача" заполнено. В противном случае выводит модальное окно с просьбой ввести заголовок задачи
+ */
+  const addTask = () => {
+    if (!taskName || taskName === " ") {
+      alert("Введите задачу");
+    } else {
+      const taskObj = {
+        taskName: taskName,
+        taskDescription: taskDescription,
+        taskFile: taskFile,
+        taskDate: taskDate,
+      };
+      setTaskArray([...taskArray, taskObj]);
+    }
+    setTaskName("");
+    setTaskDescription("");
+    setTaskDate("");
+    setTaskFile("");
+  };
+
+  /**
+   * Удаляет задачу при нажатии на соответствующий значок по ее порядковому номеру в массиве
+   * @param {number} index - порядковый номер текущей (нажатой) задачи 
+   */
+  const deleteTask = (index) => {
+    const taskArrayClone = [...taskArray];
+    taskArrayClone.splice(index, 1);
+    setTaskArray(taskArrayClone);
+  };
+
+  /**
+   * Сравнивает текущую дату и дату выполнения, указанную в задаче.
+   * @param {string} taskDate - дата выполнения, указанная при добавлении задачи в список 
+   * @returns {boolean} - true, если дата в задаче маньше текущей даты, и наоборот.
+   */
+  const checkDate = (taskDate) => {
+    const fullCurrentDate = dayjs();
+    const currentDate = fullCurrentDate
+      .format()
+      .split("")
+      .splice(0, 10)
+      .join("");
+
+    const TDate = new Date(taskDate);
+    const CDate = new Date(currentDate);
+
+    return TDate &lt; CDate;
+  };
+
+  /**
+   * Отображает поля для изменения задачи и скрывает их при повторном нажатии на соответствующий значок, сохраняя новые значения полей "Задача" и "Описание".
+   * @param {number} index - порядковый номер задачи 
+   */
+  const updateTask = (index) => {
+    if (isEditable === index) {
+      setIsEditable(null);
+
+      const taskArrayClone = [...taskArray];
+      if (updateInput !== "") {
+        taskArrayClone[index].taskName = updateInput;
+      }
+      if (updateTextarea !== "") {
+        taskArrayClone[index].taskDescription = updateTextarea;
+      }
+      setTaskArray(taskArrayClone);
+    } else {
+      setIsEditable(index);
+    }
+  };
+
+  return (
+    &lt;div className="todo">
+      &lt;h1 className="title">To do&lt;/h1>
+      &lt;div className="todo-box">
+        &lt;div>
+          &lt;form className="add-task" onSubmit={handleSubmit}>
+            &lt;div className="task-inputs">
+              &lt;input
+                className="title-input"
+                value={taskName}
+                onInput={handleInput}
+                placeholder="Задача"
+              />
+              &lt;textarea
+                className="description-textarea"
+                value={taskDescription}
+                onChange={handleTextarea}
+                placeholder="Описание"
+              />
+              &lt;label className="change-date">
+                Дата завершения
+                &lt;input
+                  value={taskDate}
+                  onChange={handleDate}
+                  type="date"
+                  name="calendar"
+                />
+              &lt;/label>
+            &lt;/div>
+            &lt;label>
+              &lt;input
+                className="file-input"
+                value={taskFile}
+                onChange={handleFile}
+                type="file"
+              />
+              &lt;img
+                className="clip-image"
+                src="https://cdn-icons-png.flaticon.com/512/889/889662.png"
+                alt="clip"
+              >&lt;/img>
+            &lt;/label>
+            &lt;button className="add-task-button" onClick={addTask}>
+              &lt;img
+                className="btn-image"
+                src="https://cdn-icons-png.flaticon.com/512/2732/2732649.png"
+                alt="plus"
+              >&lt;/img>
+            &lt;/button>
+          &lt;/form>
+        &lt;/div>
+
+        {taskArray.length !== 0 ? (
+          taskArray.map((item, index) => (
+            &lt;div className="task-item">
+              &lt;div className="main-task-info">
+                {isEditable === index ? (
+                  &lt;input value={updateInput} onInput={handleUpdateInput} />
+                ) : (
+                  &lt;label className="task-name">
+                    &lt;input type="checkbox" />
+                    &lt;span className="checkmark">&lt;/span>
+                    &lt;h3>{item.taskName}&lt;/h3>
+                  &lt;/label>
+                )}
+
+                &lt;div className="aside-icons">
+                  &lt;img
+                    className="change-task"
+                    onClick={() => {
+                      updateTask(index);
+                    }}
+                    src="https://cdn-icons-png.flaticon.com/512/1828/1828918.png"
+                    alt="change-task"
+                  >&lt;/img>
+                  &lt;img
+                    className="delete-task"
+                    onClick={(index) => {
+                      deleteTask(index);
+                    }}
+                    src="https://cdn-icons-png.flaticon.com/512/1214/1214428.png"
+                    alt="delete-task"
+                  >&lt;/img>
+                &lt;/div>
+              &lt;/div>
+              &lt;div className="task-description">
+                {isEditable === index ? (
+                  &lt;textarea
+                    value={updateTextarea}
+                    onChange={handleUpdateTextarea}
+                    style={{ resize: "none", fontFamily: "Manrope" }}
+                  />
+                ) : (
+                  &lt;p className="description">{item.taskDescription}&lt;/p>
+                )}
+                {item.taskFile !== "" ? (
+                  &lt;a className="files" href={taskFile}>
+                    Вложения
+                  &lt;/a>
+                ) : (
+                  &lt;span>&lt;/span>
+                )}
+                {checkDate(item.taskDate) ? (
+                  &lt;p
+                    className="date"
+                    style={{ color: "red", fontWeight: "bold" }}
+                  >
+                    {item.taskDate}
+                  &lt;/p>
+                ) : (
+                  &lt;p className="date">{item.taskDate}&lt;/p>
+                )}
+              &lt;/div>
+            &lt;/div>
+          ))
+        ) : (
+          &lt;div>Пока здесь нет задач&lt;/div>
+        )}
+      &lt;/div>
+    &lt;/div>
+  );
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Namespaces</h3><ul><li><a href="ToDo.html">ToDo</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.0</a> on Fri Nov 18 2022 21:48:44 GMT+0300 (Москва, стандартное время)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
